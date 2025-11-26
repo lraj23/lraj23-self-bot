@@ -81,6 +81,30 @@ app.action(/^welcomer-.+$/, async ({ ack, action: { value }, body: { user: { id:
 	await sendAslraj23("Thanks for responding!", "respond", respond);
 });
 
+app.message(/@(channel|here)/, async ({ message: { channel, user, thread_ts, ts, text } }) => {
+	if (user !== lraj23UserId) return;
+	if (text.includes("\\@channel") || text.includes("\\@here")) return await sendAslraj23({
+		channel,
+		user,
+		text: "Your ping was escaped!"
+	}, "ephemeral");
+	await app.client.chat.delete({ token, channel, ts });
+	await sendAslraj23({
+		channel,
+		text: "A ping was run by <@" + user + ">",
+		blocks: [
+			{
+				type: "section",
+				text: {
+					type: "mrkdwn",
+					text: text.split("@channel").join("<!channel|channel>").split("@here").join("<!here|here>")
+				}
+			}
+		],
+		thread_ts
+	}, "message");
+});
+
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
 
 app.action("cancel", async ({ ack, respond }) => [await ack(), await respond({ delete_original: true })]);
