@@ -3,8 +3,27 @@ import { getlraj23, saveState } from "./datahandler.js";
 import { blocks } from "./blocks.js";
 const lraj23UserId = "U0947SL6AKB";
 const lraj23BotTestingId = "C09GR27104V";
+const lraj23sLavishLodgeId = "C09KUCDAXFE";
+const lraj23sMezzanineId = "C09RMSA9L2K";
+const lraj23BotUserId = "U09VDSCRBK6";
+const token = process.env.LRAJ23_BOT_USER_TOKEN;
+const disclaimer = "_Disclaimer: this message was sent through a bot (<@" + lraj23BotUserId + ">), so it may be automated and may not reflect my actual views or opinions..._\n";
 const gPortfolioDmId = "D09SN86RFC1";
 const commands = {};
+const sendAslraj23 = async (message, type, respond) => {
+	switch (type) {
+		case "message":
+			await app.client.chat.postMessage({ ...message, token });
+			break;
+		case "ephemeral":
+			await app.client.chat.postEphemeral({ ...message, token });
+			break;
+		case "respond":
+			if (typeof message === typeof typeof message) await respond({ text: message, token });
+			else await respond({ ...message, token });
+			break;
+	}
+};
 
 app.message("", async ({ message: { text, channel, channel_type } }) => {
 	if ((channel_type === "im") && (channel === gPortfolioDmId)) {
@@ -28,6 +47,16 @@ app.message("", async ({ message: { text, channel, channel_type } }) => {
 			}
 		});
 	}
+});
+
+// Channel welcomer for #lraj23-bot-testing, #lraj23s-lavish-abode, and #lraj23s-mezzanine
+app.event("member_joined_channel", async ({ event: { user, channel } }) => {
+	if (![lraj23BotTestingId, lraj23sLavishLodgeId, lraj23sMezzanineId].includes(channel)) return;
+	console.log("member joined channel: <@" + user + "> joined <#" + channel + ">");
+	await sendAslraj23({
+		channel,
+		text: disclaimer + "Hi there <@" + user + ">! Welcome to <#" + channel + ">! In this channel, <@" + lraj23UserId + "> " + ["tests his bots, including but not limited to:\n\t:chess-emojis: Chess Emojis;\n\t:competitive-chess-emojis: Competitive Chess Emojis;\n\t:magical-chess-emojis: Magical Chess Emojis;\n\t:secret-signal-service: Secret Signal Service;\n\t:you-must-be-active: You-must-be-active Manager;\n\t:count-draqula: Count Draqula;\n\t:grid-portfolio: Grid Portfolio;\n\t:folding-paper: Folding Paper;\n\t:tone-tag-framework: Tone Tag Framework; and\n\t:lraj23-self-bot: lraj23 Self Bot (this bot!!).", "talks about random things, but only when people are active. :shrug3d: Not a lot goes on in here I guess, so you can try to make it active!", "literally doesn't do anything. Idk why this place exists anymore... :pensive-wobble:"][[lraj23BotTestingId, lraj23sLavishLodgeId, lraj23sMezzanineId].indexOf(channel)]
+	}, "message");
 });
 
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
