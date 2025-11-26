@@ -19,7 +19,7 @@ const sendAslraj23 = async (message, type, respond) => {
 			await app.client.chat.postEphemeral({ ...message, token });
 			break;
 		case "respond":
-			if (typeof message === typeof typeof message) await respond({ text: message, token });
+			if (typeof message === "string") await respond({ text: message, token });
 			else await respond({ ...message, token });
 			break;
 	}
@@ -57,6 +57,28 @@ app.event("member_joined_channel", async ({ event: { user, channel } }) => {
 		channel,
 		text: disclaimer + "Hi there <@" + user + ">! Welcome to <#" + channel + ">! In this channel, <@" + lraj23UserId + "> " + ["tests his bots, including but not limited to:\n\t:chess-emojis: Chess Emojis;\n\t:competitive-chess-emojis: Competitive Chess Emojis;\n\t:magical-chess-emojis: Magical Chess Emojis;\n\t:secret-signal-service: Secret Signal Service;\n\t:you-must-be-active: You-must-be-active Manager;\n\t:count-draqula: Count Draqula;\n\t:grid-portfolio: Grid Portfolio;\n\t:folding-paper: Folding Paper;\n\t:tone-tag-framework: Tone Tag Framework; and\n\t:lraj23-self-bot: lraj23 Self Bot (this bot!!).", "talks about random things, but only when people are active. :shrug3d: Not a lot goes on in here I guess, so you can try to make it active!", "literally doesn't do anything. Idk why this place exists anymore... :pensive-wobble:"][[lraj23BotTestingId, lraj23sLavishLodgeId, lraj23sMezzanineId].indexOf(channel)]
 	}, "message");
+	await app.client.chat.postMessage({
+		channel,
+		username: "lraj23 Welcomer",
+		icon_emoji: "transparent",
+		text: "<@" + lraj23UserId + "> ^^"
+	});
+	await sendAslraj23({
+		channel,
+		user,
+		text: disclaimer + "What brings you here?",
+		blocks: blocks.welcomer
+	}, "ephemeral");
+});
+
+app.action(/^welcomer-.+$/, async ({ ack, action: { value }, body: { user: { id: user }, channel: { id: channel } }, respond }) => {
+	await ack();
+	console.log(user, channel, value);
+	await sendAslraj23({
+		channel,
+		text: disclaimer + "><@" + user + "> clicked " + ["\"You invited me!\"", "\"Saw this somewhere\"", "\"Looking for channels...\"", "\"Other\""][["invited", "sawthis", "searching", "other"].indexOf(value)]
+	}, "message");
+	await sendAslraj23("Thanks for responding!", "respond", respond);
 });
 
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
