@@ -10,10 +10,43 @@ const token = process.env.LRAJ23_BOT_USER_TOKEN;
 const disclaimer = "_Disclaimer: this message was sent through a bot (<@" + lraj23BotUserId + ">), so it may be automated and may not reflect my actual views or opinions..._\n";
 const gPortfolioDmId = "D09SN86RFC1";
 const commands = {};
+const postMessage = async message => {
+	try {
+		await app.client.chat.postMessage(message);
+	} catch (e) {
+		const { data: { error } } = e;
+		console.error(error);
+		if (error === "channel_not_found") {
+			console.log("not in private channel <#" + message.channel + ">");
+			try {
+				await app.client.conversations.invite({
+					token,
+					channel: message.channel,
+					users: lraj23BotUserId
+				});
+				await postMessage(message);
+			} catch (err) {
+				console.error(err);
+			}
+		} else if (error === "invalid_blocks") {
+			await postMessage({
+				channel: message.channel,
+				token: message.token,
+				thread_ts: message.thread_ts,
+				text: disclaimer + "_This message was left blank..._"
+			});
+		} else await postMessage({
+			channel: message.channel,
+			token: message.token,
+			thread_ts: message.thread_ts,
+			text: disclaimer + "_There was an error..._"
+		});
+	}
+};
 const sendAslraj23 = async (message, type, respond) => {
 	switch (type) {
 		case "message":
-			await app.client.chat.postMessage({ ...message, token });
+			await postMessage({ ...message, token });
 			break;
 		case "ephemeral":
 			await app.client.chat.postEphemeral({ ...message, token });
@@ -57,7 +90,7 @@ app.event("member_joined_channel", async ({ event: { user, channel } }) => {
 		channel,
 		text: disclaimer + "Hi there <@" + user + ">! Welcome to <#" + channel + ">! In this channel, <@" + lraj23UserId + "> " + ["tests his bots, including but not limited to:\n\t:chess-emojis: Chess Emojis;\n\t:competitive-chess-emojis: Competitive Chess Emojis;\n\t:magical-chess-emojis: Magical Chess Emojis;\n\t:secret-signal-service: Secret Signal Service;\n\t:you-must-be-active: You-must-be-active Manager;\n\t:count-draqula: Count Draqula;\n\t:grid-portfolio: Grid Portfolio;\n\t:folding-paper: Folding Paper;\n\t:tone-tag-framework: Tone Tag Framework; and\n\t:lraj23-self-bot: lraj23 Self Bot (this bot!!).", "talks about random things, but only when people are active. :shrug3d: Not a lot goes on in here I guess, so you can try to make it active!", "literally doesn't do anything. Idk why this place exists anymore... :pensive-wobble:"][[lraj23BotTestingId, lraj23sLavishLodgeId, lraj23sMezzanineId].indexOf(channel)]
 	}, "message");
-	await app.client.chat.postMessage({
+	await postMessage({
 		channel,
 		username: "lraj23 Welcomer",
 		icon_emoji: "transparent",
@@ -81,6 +114,7 @@ app.action(/^welcomer-.+$/, async ({ ack, action: { value }, body: { user: { id:
 	await sendAslraj23("Thanks for responding!", "respond", respond);
 });
 
+// @channel and @here pinging
 app.message(/@(channel|here)/, async ({ message: { channel, user, thread_ts, ts, text } }) => {
 	if (user !== lraj23UserId) return;
 	if (text.includes("\\@channel") || text.includes("\\@here")) return await sendAslraj23({
@@ -92,15 +126,24 @@ app.message(/@(channel|here)/, async ({ message: { channel, user, thread_ts, ts,
 	await sendAslraj23({
 		channel,
 		text: "A ping was run by <@" + user + ">",
-		blocks: [
-			{
-				type: "section",
-				text: {
-					type: "mrkdwn",
-					text: text.split("@channel").join("<!channel|channel>").split("@here").join("<!here|here>")
-				}
-			}
-		],
+		blocks: blocks.channelHerePing(text),
+		thread_ts
+	}, "message");
+});
+
+// message with /echo
+app.message("/echo", async ({ message: { channel, user, thread_ts, ts, text } }) => {
+	if (user !== lraj23UserId) return;
+	if (text.includes("\\/echo")) return await sendAslraj23({
+		channel,
+		user,
+		text: "Your /echo was escaped!"
+	}, "ephemeral");
+	await app.client.chat.delete({ token, channel, ts });
+	await (text.includes("--as-self") ? sendAslraj23 : postMessage)({
+		channel,
+		text: "An echo was run by <@" + user + ">",
+		blocks: blocks.echo(text),
 		thread_ts
 	}, "message");
 });

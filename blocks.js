@@ -75,6 +75,26 @@ blocks.welcomer = [
 	}
 ];
 
+blocks.channelHerePing = text => [
+	{
+		type: "section",
+		text: {
+			type: "mrkdwn",
+			text: text.split("@channel").join("<!channel|channel>").split("@here").join("<!here|here>")
+		}
+	}
+];
+
+blocks.echo = text => [
+	{
+		type: "section",
+		text: {
+			type: "mrkdwn",
+			text: text.split("/echo").join("").split("--as-self").join("")
+		}
+	},
+];
+
 export {
 	blocks
 };
