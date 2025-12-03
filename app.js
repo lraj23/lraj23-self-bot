@@ -230,7 +230,7 @@ app.action("cancel", async ({ ack, respond }) => [await ack(), await respond({ d
 
 app.action("confirm", async ({ ack }) => await ack());
 
-commands.help = async ({ ack, respond, body: { user_id } }) => [await ack(), await respond("This is the lraj23 Self Bot! It represents <@" + lraj23UserId + "> in various occasions for various reasons. _More information to be added..._\nFor more information, check out the readme at https://github.com/lraj23/lraj23-self-bot."), user_id === lraj23UserId ? await respond("Test but only for <@" + lraj23UserId + ">. If you aren't him and you see this message, DM him IMMEDIATELY about this!") : null];
+commands.help = async ({ ack, respond, body: { user_id } }) => [await ack(), await respond("This is the lraj23 Self Bot! It represents <@" + lraj23UserId + "> in various occasions for various reasons. For example, I can get it to echo messages or welcome new members in a channel.\nFor more information, check out the readme at https://github.com/lraj23/lraj23-self-bot."), user_id === lraj23UserId ? await respond("Test but only for <@" + lraj23UserId + ">. If you aren't him and you see this message, DM him IMMEDIATELY about this!") : null];
 app.command("/lraj23-help", commands.help);
 
 app.message(/secret button/i, async ({ message: { channel, user, thread_ts, ts } }) => await app.client.chat.postEphemeral({
