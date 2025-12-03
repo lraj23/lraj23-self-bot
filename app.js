@@ -148,6 +148,82 @@ app.message("/echo", async ({ message: { channel, user, thread_ts, ts, text } })
 	}, "message");
 });
 
+// // add emoji with /add-emoji
+// app.message("/add-emoji", async ({ message }) => {
+// 	const { channel, user, thread_ts, ts, text } = message;
+// 	if (user !== lraj23UserId) return;
+// 	if (text.includes("\\/add-emoji")) return await sendAslraj23({
+// 		channel,
+// 		user,
+// 		text: "Your /add-emoji was escaped!"
+// 	}, "ephemeral");
+// 	console.log(message.files);
+// 	// if (!message.files) return await postMessage({
+// 	// 	channel,
+// 	// 	text: "Could not add emoji since image was not attached..."
+// 	// });
+// 	// await app.client.chat.delete({ token, channel, ts });
+// 	const emojiName = text.split("/add-emoji")[0].trim();
+
+// 	// const form = new FormData();
+// 	// form.append("token", process.env.LRAJ23_BOT_XOXC_TOKEN);
+// 	// form.append("mode", "data");
+// 	// form.append("name", emojiName);
+
+// 	// let imgBuffer = await fetch(message.files[0].url_private).then(res => res.blob());
+// 	// console.log(imgBuffer);
+
+// 	// const blob = new Blob([imgBuffer], { type: "image/png" });
+// 	// console.log(blob);
+
+// 	// form.append("image", blob);
+
+// 	try {
+// 		// fetch("https://hackclub.enterprise.slack.com/api/emoji.add", {
+// 		// 	method: "POST",
+// 		// 	headers: {
+// 		// 		Cookie: "d=" + process.env.LRAJ23_BOT_XOXD_TOKEN
+// 		// 	},
+// 		// 	// body: form,
+// 		// 	body: {
+// 		// 		token: process.env.LRAJ23_BOT_XOXC_TOKEN,
+// 		// 		name: emojiName,
+// 		// 		mode: "data",
+// 		// 		image: blob
+// 		// 	}
+// 		// 	// data: {
+// 		// 	// 	token: process.env.LRAJ23_BOT_XOXC_TOKEN,
+// 		// 	// 	name: emojiName,
+// 		// 	// 	mode: "data",
+// 		// 	// 	image: imgBuffer
+// 		// 	// }
+// 		// }).then(async res => {
+// 		// 	console.log("finished successfully", res);
+// 		fetch("https://hackclub.enterprise.slack.com/api/emoji.add", {
+// 			headers: {
+// 				Cookie: "d=" + process.env.LRAJ23_BOT_XOXD_TOKEN
+// 			},
+// 			data: {
+// 				token: process.env.LRAJ23_BOT_XOXC_TOKEN,
+// 				name: emojiName,
+// 				mode: "url",
+// 				url: "https://avatars.slack-edge.com/2025-11-25/9994252166806_fe73c6ff1a813e655959_512.png"
+// 			}
+// 		});
+// 		await postMessage({
+// 			channel,
+// 			text: "Added new emoji: :" + emojiName + ":"
+// 		});
+// 		// }).catch(err => {
+// 		// 	console.log("failed successfully", err);
+// 		// });
+
+// 		// requests.post('https://hackclub.enterprise.slack.com/api/emoji.add',headers={'Cookie':'d=xoxd-...'},data={'token':'xoxc-...','name':'testing','mode':'url','url':'https://files.slack.com/files-pri/T09V59WQY1E-F09KY9DU1V4/test.gif?pub_secret=3ce4149c2e'})
+// 	} catch (e) {
+// 		console.error(e);
+// 	}
+// });
+
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
 
 app.action("cancel", async ({ ack, respond }) => [await ack(), await respond({ delete_original: true })]);
@@ -185,9 +261,9 @@ app.message(/secret button/i, async ({ message: { channel, user, thread_ts, ts }
 	]
 }));
 
-app.action("button_click", async ({ body: { channel: { id: cId }, user: { id: uId }, container: { thread_ts } }, ack }) => [await ack(), await app.client.chat.postEphemeral({
-	channel: cId,
-	user: uId,
+app.action("button_click", async ({ body: { channel: { id: channel }, user: { id: user }, container: { thread_ts } }, ack }) => [await ack(), await app.client.chat.postEphemeral({
+	channel,
+	user,
 	text: "You found the secret button. Here it is again.",
 	thread_ts,
 	blocks: [
