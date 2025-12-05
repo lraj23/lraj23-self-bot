@@ -20,6 +20,9 @@ Including the text "/echo" in any message I send in any channel will result in t
 #### --as-self
 If the message is already going to be echoed by the above method (so it must include "/echo"), but my message also includes "--as-self" then instead of my bot responding it will respond using my account, making it appear as though I simply deleted and resent the message edited. This can be useful for things like converting text to pings.
 
+#### /winter
+If a message includes "/winter" and is not escaped with "\/winter" the bot will automatically delete my original message. It will then make an AI request to generate a version of my message that is winter-themed. It prompts me if I want to use that, and if I do, it automatically sends that as me. If I don't like it and want to regenerate, I can also do that with one click. Finally, I can also just cancel sending the message.
+
 #### /lraj23-help
 This command gives some information about this bot, but isn't really useful.
 
