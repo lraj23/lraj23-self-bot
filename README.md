@@ -4,6 +4,12 @@
 
 The main purpose of this bot is to permit me to easily do various tasks, or to automate other things, etc. as a generic self bot would do. If I use text commands like /echo, --as-self/echo, @channel, etc. the bot will respond to them in various ways, including taking actions as me.
 
+### Demo Video
+
+Since this bot is only supposed to be usable by me, I have included a 4 minute demo video where I use all of the bot's features as of that point in time. The title of the video is `lraj23-self-bot.mkv`, and it is about 83 megabytes. You can also try [this link](https://hackclub.enterprise.slack.com/files/U0947SL6AKB/F0A1RHAAK2N/lraj23-self-bot.mkv) in my channel to avoid downloading. The video consists of me using the /echo, --as-self/echo, @channel, @here, channel welcoming, and /winter features in that order (though I only @here ping and not @channel ping to reduce pings).
+
+If you still have questions about the bot at all, just join [#lraj23-bot-testing](https://www.hackclub.enterprise.slack.com/archives/C09GR27104V) and ask me! I can demonstrate certain features live, take extra screen recordings, or just answer questions (as long as my local time is between 3PM and 11PM :skulk:)!
+
 ### Commands
 
 In my bot, most commands are through text, where I send a message that includes a keyword, and then my bot deletes the original message (most of the time) and performs an action. Therefore, none of the below are commands, even if they appear to be, except for /lraj23-help. Additionally, whenever someone joins [#lraj23-bot-testing](https://www.hackclub.enterprise.slack.com/archives/C09GR27104V), [#lraj23s-lavish-abode](https://hackclub.enterprise.slack.com/archives/C09KUCDAXFE), or [my tier 2 personal channel (private)](https://hackclub.enterprise.slack.com/archives/C09RMSA9L2K), the bot greets them with a welcome message through my account then notifies me. It also asks the person who joined why they joined.
