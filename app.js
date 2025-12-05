@@ -1,6 +1,12 @@
 import app from "./client.js";
 import { getlraj23, saveState } from "./datahandler.js";
 import { blocks } from "./blocks.js";
+const aiApiUrl = "https://ai.hackclub.com/proxy/v1/chat/completions";
+const headers = {
+	"Authorization": "Bearer " + process.env.LRAJ23_BOT_AI_API_KEY,
+	"Content-Type": "application/json"
+};
+const systemMessageWinter = "My user message is sent in a Slack channel, and it most likely isn't already winter themed. Your job, as my winter-themed self bot, is to convert my original message into a similar message that is winter themed. If the message is already winter themed, you can leave it almost as it is or just modify it a little bit. If it has nothing to do with winter, you can change the meaning of the message, as long as it is still resembling the original message. Including a winter theme in the message can be as simple as modifying one sentence to mention a winter related event. The user output MUST be EXACTLY just the string of the final winter themed message to send. Do not add anything else to your final response, though you can explain your reasoning the in the reasoning section.";
 const lraj23UserId = "U0947SL6AKB";
 const lraj23BotTestingId = "C09GR27104V";
 const lraj23sLavishLodgeId = "C09KUCDAXFE";
@@ -223,6 +229,79 @@ app.message("/echo", async ({ message: { channel, user, thread_ts, ts, text } })
 // 		console.error(e);
 // 	}
 // });
+
+// winter themed messages with /winter
+const generate = async text => {
+	const response = await fetch(aiApiUrl, {
+		method: "POST",
+		headers,
+		body: JSON.stringify({
+			model: "openai/gpt-oss-120b",
+			messages: [
+				{
+					role: "system",
+					content: systemMessageWinter
+				},
+				{
+					role: "user",
+					content: text.split("/winter").join("")
+				}
+			]
+		})
+	});
+	const data = await response.json();
+	console.log(data.choices[0].message);
+	return data;
+};
+let originalWinterText = "";
+let statement = "";
+app.message("/winter", async ({ message: { channel, user, thread_ts, ts, text } }) => {
+	if (user !== lraj23UserId) return;
+	if (text.includes("\\winter")) return await sendAslraj23({
+		channel,
+		user,
+		text: "Your /winter was escaped!"
+	}, "ephemeral");
+
+	const data = await generate(text);
+	originalWinterText = text;
+	statement = data.choices[0].message.content;
+	await sendAslraj23({
+		channel,
+		user,
+		thread_ts,
+		text: "The AI came up with this statement. Would you like to use it instead?",
+		blocks: blocks.winter(statement)
+	}, "ephemeral");
+	await app.client.chat.delete({ token, channel, ts });
+});
+
+app.action("regenerate-winter", async ({ ack, body: { user: { id: user }, channel: { id: channel }, container: { thread_ts } }, respond }) => {
+	await ack();
+	console.log(originalWinterText);
+	const data = await generate(originalWinterText);
+	statement = data.choices[0].message.content;
+	await respond({ delete_original: true });
+	await sendAslraj23({
+		channel,
+		user,
+		thread_ts,
+		text: "The AI came up with this statement. Would you like to use it instead?",
+		blocks: blocks.winter(statement)
+	}, "ephemeral");
+});
+
+app.action("confirm-winter", async ({ ack, body: { channel: { id: channel }, container: { thread_ts } }, respond }) => {
+	await ack();
+	console.log(originalWinterText, statement);
+	await respond({ delete_original: true });
+	await sendAslraj23({
+		channel,
+		thread_ts,
+		text: "An AI-generated winter-themed message was sent by <@" + lraj23UserId + ">",
+		blocks: blocks.winterFinal(statement)
+	}, "message");
+});
 
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
 

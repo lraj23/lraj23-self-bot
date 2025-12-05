@@ -95,6 +95,61 @@ blocks.echo = text => [
 	},
 ];
 
+blocks.winter = statement => [
+	{
+		type: "section",
+		text: {
+			type: "mrkdwn",
+			text: "The AI came up with this statement. Would you like to use it, or instead regenerate?\n" + statement
+		}
+	},
+	{
+		type: "actions",
+		elements: [
+			{
+				type: "button",
+				text: {
+					type: "plain_text",
+					text: ":x: Cancel",
+					emoji: true
+				},
+				value: "cancel",
+				action_id: "cancel"
+			},
+			{
+				type: "button",
+				text: {
+					type: "plain_text",
+					text: ":ai: Regenerate",
+					emoji: true
+				},
+				value: "regenerate",
+				action_id: "regenerate-winter"
+			},
+			{
+				type: "button",
+				text: {
+					type: "plain_text",
+					text: ":white_check_mark: Go!",
+					emoji: true
+				},
+				value: "confirm",
+				action_id: "confirm-winter"
+			}
+		]
+	}
+];
+
+blocks.winterFinal = statement => [
+	{
+		type: "section",
+		text: {
+			type: "mrkdwn",
+			text: statement
+		}
+	},
+];
+
 export {
 	blocks
 };
