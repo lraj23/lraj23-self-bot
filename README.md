@@ -40,4 +40,4 @@ The dedicated channel for testing this bot is [#lraj23-bot-testing](https://hack
 
 Does the demo video appear?
 
-[Demo Video](https://raw.githubusercontent.com/lraj23/lraj23-self-bot/refs/heads/main/lraj23-self-bot.mp4)
+https://github.com/user-attachments/assets/d68e2f56-2593-4b24-bb71-2fd2532d3c7d
