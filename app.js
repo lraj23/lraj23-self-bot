@@ -174,7 +174,7 @@ app.message(/@(channel|here)/, async ({ message: { channel, user, thread_ts, ts,
 	await app.client.chat.delete({ token, channel, ts });
 	await sendAslraj23({
 		channel,
-		text: "A ping was run by <@" + user + ">",
+		text: text.split("@channel").join("<!channel|channel>").split("@here").join("<!here|here>"),
 		blocks: blocks.channelHerePing(text),
 		thread_ts
 	}, "message");
@@ -191,7 +191,7 @@ app.message("/echo", async ({ message: { channel, user, thread_ts, ts, text } })
 	await app.client.chat.delete({ token, channel, ts });
 	await (text.includes("--as-self") ? sendAslraj23 : postMessage)({
 		channel,
-		text: "An echo was run by <@" + user + ">",
+		text: text.split("/echo").join("").split("--as-self").join(""),
 		blocks: blocks.echo(text),
 		thread_ts
 	}, "message");
