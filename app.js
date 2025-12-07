@@ -12,7 +12,15 @@ const systemMessageLavith = async context => {
 	if (!newContext[0].thread_ts) newContext = newContext.slice(-25);
 	for (let i = 0; i < (newContext.length - 1); i++) {
 		const message = newContext[i];
-		const user = await app.client.users.info({ user: message.user });
+		const user = (message.user === "B09V6S396NR (that's you)" ? {
+			user: {
+				name: "Lavith",
+				real_name: "Lavith AI",
+				profile: {
+					pronouns: "he/him/bot"
+				}
+			}
+		} : await app.client.users.info({ user: message.user }));
 		newContext[i] = "\nUser " + message.user + ", with the display name " + user.user.name + " and real name " + user.user.real_name + " (and pronouns " + user.user.profile.pronouns + "), said (at " + new Date(message.ts * 1000).toLocaleString() + "): " + message.text;
 	}
 	const thisUser = (await app.client.users.info({ user: newContext[newContext.length - 1].user })).user;
@@ -53,7 +61,7 @@ const gPortfolioDmId = "D09SN86RFC1";
 const commands = {};
 const postMessage = async message => {
 	try {
-		await app.client.chat.postMessage(message);
+		return await app.client.chat.postMessage(message);
 	} catch (e) {
 		const { data: { error } } = e;
 		console.error(error);
@@ -316,10 +324,11 @@ app.action("confirm-winter", async ({ ack, body: { channel: { id: channel }, con
 	}, "message");
 });
 
-// "witty" responses with /lraj23
+// "witty" responses as "Lavith AI"
 app.message("", async ({ message }) => {
 	const { channel, thread_ts, ts, text } = message;
-	if (![lraj23BotTestingId].includes(channel)) return;
+	if (![lraj23BotTestingId, botsInATrenchCoatId].includes(channel)) return;
+	console.log(message);
 	let lraj23 = getlraj23();
 	if (!lraj23.conversations[channel]) lraj23.conversations[channel] = { none: [] };
 	if (!thread_ts) lraj23.conversations[channel].none.push(message);
@@ -335,15 +344,28 @@ app.message("", async ({ message }) => {
 	const systemMessage = await systemMessageLavith(thread_ts ? lraj23.conversations[channel][thread_ts] : lraj23.conversations[channel].none);
 	const data = await generate(systemMessage, text);
 	const response = data.choices[0].message.content;
-	response.split("\n").forEach(async message => {
-		if (message && (message !== "NA")) await postMessage({
-			channel,
-			thread_ts: thread_ts || ts,
-			text: message,
-			username: "Lavith AI",
-			icon_emoji: "lraj23"
-		});
-	});
+	for (let i = 0; i < response.split("\n").length; i++) {
+		const line = response.split("\n")[i];
+		if (line && (line !== "NA")) {
+			const botMessage = (await postMessage({
+				channel,
+				thread_ts: thread_ts || ts,
+				text: line,
+				username: "Lavith AI",
+				icon_emoji: "lraj23"
+			})).message;
+			console.log(botMessage, thread_ts);
+			if (!lraj23.conversations[channel][thread_ts]) lraj23.conversations[channel][ts] = [message, {
+				user: "B09V6S396NR (that's you)",
+				ts: botMessage.ts,
+				text: botMessage.text
+			}]; else lraj23.conversations[channel][thread_ts].push({
+				user: "B09V6S396NR (that's you)",
+				ts: botMessage.ts,
+				text: botMessage.text
+			});
+		}
+	}
 	saveState(lraj23);
 });
 
