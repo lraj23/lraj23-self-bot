@@ -95,5 +95,6 @@ export {
 	saveState,
 	getlraj23,
 	logInteraction,
-	getUserAt
+	getUserAt,
+	cloneObj
 };
