@@ -2,9 +2,9 @@
 
 ### Main Purpose
 
-The main purpose of this bot is to permit me to easily do various tasks, or to automate other things, etc. as a generic self bot would do. If I use text commands like /echo, --as-self/echo, @channel, etc. the bot will respond to them in various ways, including taking actions as me.
+The main purpose of this bot is to permit me to easily do various tasks, or to automate other things, etc. as a generic self bot would do. If I use text commands like /echo, --as-self/echo, @channel, etc. the bot will respond to them in various ways, including taking actions as me. *Additionally, it assumes the identity of "Lavith AI," a chatbot with a personality somewhat resembling mine (not really that much though it should) that responds for fun in [#lraj23-bot-testing](https://www.hackclub.enterprise.slack.com/archives/C09GR27104V), [#lraj23s-lavish-abode](https://hackclub.enterprise.slack.com/archives/C09KUCDAXFE), and [#5-bots-in-a-trenchcoat](https://hackclub.enterprise.slack.com/archives/C0A21M6CWLU).*
 
-### Commands
+### Commands and other Interactions
 
 In my bot, most commands are through text, where I send a message that includes a keyword, and then my bot deletes the original message (most of the time) and performs an action. Therefore, none of the below are commands, even if they appear to be, except for /lraj23-help. Additionally, whenever someone joins [#lraj23-bot-testing](https://www.hackclub.enterprise.slack.com/archives/C09GR27104V), [#lraj23s-lavish-abode](https://hackclub.enterprise.slack.com/archives/C09KUCDAXFE), or [my tier 2 personal channel (private)](https://hackclub.enterprise.slack.com/archives/C09RMSA9L2K), the bot greets them with a welcome message through my account then notifies me. It also asks the person who joined why they joined.
 
@@ -22,6 +22,9 @@ If the message is already going to be echoed by the above method (so it must inc
 
 #### /winter
 If a message includes "/winter" and is not escaped with "\/winter" the bot will automatically delete my original message. It will then make an AI request to generate a version of my message that is winter-themed. It prompts me if I want to use that, and if I do, it automatically sends that as me. If I don't like it and want to regenerate, I can also do that with one click. Finally, I can also just cancel sending the message.
+
+#### Lavith AI **HERE ARE THE NEW WEEK'S CHANGES**
+Any message sent in the above mentioned three channels ([#lraj23-bot-testing](https://www.hackclub.enterprise.slack.com/archives/C09GR27104V), [#lraj23s-lavish-abode](https://hackclub.enterprise.slack.com/archives/C09KUCDAXFE), or [#5-bots-in-a-trenchcoat](https://hackclub.enterprise.slack.com/archives/C0A21M6CWLU)) will be recorded and used as context for the Lavith AI. Every message will be read, and if the Lavith AI decides it wants to respond, it will. Its personality is supposed to be similar to mine, but it really isn't. It responds in the thread, and can read threads but not images. It's pretty interesting in my opinion, so shout out to @mahad for [ai.hackclub.com](). 
 
 #### /lraj23-help
 This command gives some information about this bot, but isn't really useful.
