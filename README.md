@@ -31,7 +31,7 @@ This command gives some information about this bot, but isn't really useful.
 
 ### Links, Channels, etc.
 
-The dedicated channel for testing this bot is [#lraj23-bot-testing](https://hackclub.enterprise.slack.com/archives/C09GR27104V), though it can only be used by me as of now. The GitHub repo is literally [right here](https://www.github.com/lraj23/lraj23-self-bot). My Hackatime project for this bot is called lraj23-self-bot.
+The dedicated channel for testing this bot is [#lraj23-bot-testing](https://hackclub.enterprise.slack.com/archives/C09GR27104V), though it can only be used by me as of now. The exception is for Lavith AI, who can be used in [#lraj23-bot-testing](https://www.hackclub.enterprise.slack.com/archives/C09GR27104V), [#lraj23s-lavish-abode](https://hackclub.enterprise.slack.com/archives/C09KUCDAXFE), or [#5-bots-in-a-trenchcoat](https://hackclub.enterprise.slack.com/archives/C0A21M6CWLU) by anyone. The GitHub repo is literally [right here](https://www.github.com/lraj23/lraj23-self-bot). My Hackatime project for this bot is called lraj23-self-bot.
 
 ### Demo Video
 
