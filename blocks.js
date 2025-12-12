@@ -20,6 +20,16 @@ blocks.warn = msg => [
 	}
 ];
 
+blocks.markdown = text => [
+	{
+		type: "section",
+		text: {
+			type: "mrkdwn",
+			text
+		}
+	}
+];
+
 blocks.welcomer = [
 	{
 		type: "section",
@@ -72,16 +82,6 @@ blocks.welcomer = [
 				action_id: "welcomer-other"
 			}
 		]
-	}
-];
-
-blocks.channelHerePing = text => [
-	{
-		type: "section",
-		text: {
-			type: "mrkdwn",
-			text: text.split("@channel").join("<!channel|channel>").split("@here").join("<!here|here>")
-		}
 	}
 ];
 

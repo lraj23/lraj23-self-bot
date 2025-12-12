@@ -174,12 +174,24 @@ app.message(/@(channel|here)/, async ({ message: { channel, user, thread_ts, ts,
 		text: "Your ping was escaped!"
 	}, "ephemeral");
 	await app.client.chat.delete({ token, channel, ts });
-	await sendAslraj23({
-		channel,
-		text: text.split("@channel").join("<!channel|channel>").split("@here").join("<!here|here>"),
-		blocks: blocks.channelHerePing(text),
-		thread_ts
-	}, "message");
+	const includesAtChannel = text.includes("@channel");
+	let messages = text.split(includesAtChannel ? "@channel" : "@here");
+	for (let i = 0; i < messages.length; i++) {
+		if (messages[i].length) await sendAslraj23({
+			channel,
+			text: messages[i],
+			blocks: blocks.markdown(messages[i]),
+			thread_ts
+		}, "message");
+		if (i + 1 !== messages.length) await postMessage({
+			channel,
+			text: includesAtChannel ? "<!channel>" : "<!here>",
+			blocks: blocks.markdown(includesAtChannel ? "<!channel>" : "<!here>"),
+			username: "lraj23's " + (includesAtChannel ? "Channel" : "Here") + " Pinger",
+			icon_emoji: "lraj23",
+			thread_ts
+		});
+	}
 });
 
 // message with /echo
