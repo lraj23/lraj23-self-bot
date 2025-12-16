@@ -348,7 +348,7 @@ app.action("confirm-winter", async ({ ack, body: { channel: { id: channel }, con
 	}, "message");
 });
 
-// "witty" responses as "Lavith AI"
+// "witty" responses as "Lavith AI" or "Raj AI"
 app.message("", async ({ message }) => {
 	const { channel, thread_ts, ts, text } = message;
 	if (![lraj23BotTestingId, lraj23sLavishLodgeId, botsInATrenchCoatId].includes(channel)) return;
