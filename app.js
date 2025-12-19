@@ -67,6 +67,7 @@ const lraj23sLavishLodgeId = "C09KUCDAXFE";
 const lraj23sMezzanineId = "C09RMSA9L2K";
 const botsInATrenchCoatId = "C0A21M6CWLU";
 const lraj23BotUserId = "U09VDSCRBK6";
+const countToAMillionId = "CDJMS683D";
 const token = process.env.LRAJ23_BOT_USER_TOKEN;
 const disclaimer = "_Disclaimer: this message was sent through a bot (<@" + lraj23BotUserId + ">), so it may be automated and may not reflect my actual views or opinions..._\n";
 const gPortfolioDmId = "D09SN86RFC1";
@@ -390,6 +391,9 @@ app.message("", async ({ message }) => {
 	}
 	saveState(lraj23);
 });
+
+// Automatically count certain numbers in #counttoamillion (shh... 🤫)
+app.message("", ({ message: { channel, text } }) => channel === countToAMillionId && [326646, 326666, 326700, 326767].forEach(num => text.startsWith(num - 1) && sendAslraj23({ channel, text: num }, "message")));
 
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
 
