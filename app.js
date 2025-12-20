@@ -86,18 +86,18 @@ const postMessage = async message => {
 					channel: message.channel,
 					users: lraj23BotUserId
 				});
-				await postMessage(message);
+				return await postMessage(message);
 			} catch (err) {
 				console.error(err);
 			}
 		} else if (error === "invalid_blocks") {
-			await postMessage({
+			return await postMessage({
 				channel: message.channel,
 				token: message.token,
 				thread_ts: message.thread_ts,
 				text: disclaimer + "_This message was left blank..._"
 			});
-		} else await postMessage({
+		} else return await postMessage({
 			channel: message.channel,
 			token: message.token,
 			thread_ts: message.thread_ts,
@@ -303,7 +303,7 @@ let originalWinterText = "";
 let statement = "";
 app.message("/winter", async ({ message: { channel, user, thread_ts, ts, text } }) => {
 	if (user !== lraj23UserId) return;
-	if (text.includes("\\winter")) return await sendAslraj23({
+	if (text.includes("\\/winter")) return await sendAslraj23({
 		channel,
 		user,
 		text: "Your /winter was escaped!"
@@ -351,9 +351,26 @@ app.action("confirm-winter", async ({ ack, body: { channel: { id: channel }, con
 
 // "witty" responses as "Lavith AI" or "Raj AI"
 app.message("", async ({ message }) => {
-	const { channel, thread_ts, ts, text } = message;
-	if (![lraj23BotTestingId, lraj23sLavishLodgeId, botsInATrenchCoatId].includes(channel)) return;
+	const { channel, user, thread_ts, ts, text } = message;
 	let lraj23 = getlraj23();
+	if (text.includes("/channel-opt")) { // opt Lavith and Raj AI in and out of channels
+		if (user !== lraj23UserId) return;
+		if (text.includes("\\/channel-opt")) return await sendAslraj23({
+			channel,
+			user,
+			text: "Your /channel-opt was escaped!"
+		}, "ephemeral");
+
+		if (text.includes("in/channel-opt"))
+			if (lraj23.allowedChannels.includes(channel)) sendAslraj23({ channel, user, text: "Already opted in..." }, "ephemeral");
+			else lraj23.allowedChannels.push(channel);
+		else
+			if (lraj23.allowedChannels.includes(channel)) lraj23.allowedChannels.splice(lraj23.allowedChannels.indexOf(channel), 1);
+			else sendAslraj23({ channel, user, text: "Already opted out..." }, "ephemeral");
+		await app.client.chat.delete({ token, channel, ts });
+		return saveState(lraj23);
+	}
+	if (!lraj23.allowedChannels.includes(channel)) return;
 	if (!lraj23.conversations[channel]) lraj23.conversations[channel] = { none: [] };
 	if (!thread_ts) lraj23.conversations[channel].none.push(message);
 	else if (!lraj23.conversations[channel][thread_ts]) {
