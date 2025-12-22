@@ -412,6 +412,22 @@ app.message("", async ({ message }) => {
 // Automatically count certain numbers in #counttoamillion (shh... 🤫)
 app.message("", ({ message: { channel, text } }) => channel === countToAMillionId && [326646, 326666, 326700, 326767].forEach(num => text.startsWith(num - 1) && sendAslraj23({ channel, text: num }, "message")));
 
+// Try authorization with /authorize-link
+// app.message("/authorize-link", async ({ message: { channel, user, thread_ts, text } }) => {
+// 	if (text.includes("\\/authorize-link")) return await sendAslraj23({
+// 		channel,
+// 		user,
+// 		text: "Your /authorize-link was escaped!"
+// 	}, "ephemeral");
+
+// 	await sendAslraj23({
+// 		channel,
+// 		user,
+// 		thread_ts,
+// 		text: "Link: <https://slack.com/oauth/v2/authorize?user_scope=chat:write&client_id=" + process.env.LRAJ23_BOT_CLIENT_ID + "&redirect_uri=https://unimpressed-unplastic-chelsey.ngrok-free.dev/|Authorization Link..?>"
+// 	}, "ephemeral");
+// });
+
 app.action(/^ignore-.+$/, async ({ ack }) => await ack());
 
 app.action("cancel", async ({ ack, respond }) => [await ack(), await respond({ delete_original: true })]);
